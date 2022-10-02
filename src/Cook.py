@@ -25,14 +25,16 @@ class Cook(threading.Thread):
                 order = self.order_q.get()
                 order_items = order["order"]['order_items']
 
-                while order_items:
-                    item = order_items.pop(0)
-                    print(item)
-                    item_id = item["id"]
-                    self.cook(item_id)
-                requests.post(f"{DINING_HALL_URL}/order-from-kitchen", json=json.dumps(order))
-            else:
-                time.sleep(3)
+                for i in range(self.proeficiency):
+                    while order_items:
+                        item = order_items.pop(0)
+                        task_thread = threading.Thread(target=self.cook, args=[item["id"]])
+                        task_thread.daemon = True
+                        task_thread.start()
+                        print(item)
+                        requests.post(f"{DINING_HALL_URL}/order-from-kitchen", json=json.dumps(order))
+                    else:
+                        time.sleep(3)
 
     def cook(self, item_id):
         menu_item = self.menu.get_menu_item(item_id)
