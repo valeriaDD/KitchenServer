@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "rank": 3,
+    "proeficiency": 4,
+    "name": "Ion"
+  },
+  {
+    "id": 2,
+    "rank": 2,
+    "proeficiency": 3,
+    "name": "Vasile"
+  },
+  {
+    "id": 3,
+    "rank": 2,
+    "proeficiency": 2,
+    "name": "Daniel"
+  },
+  {
+    "id": 4,
+    "rank": 1,
+    "proeficiency": 2,
+    "name": "Artur"
+  }
+]

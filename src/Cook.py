@@ -11,11 +11,12 @@ DINING_HALL_URL = "http://dining-hall:5001"
 class Cook(threading.Thread):
     menu = Menu()
 
-    def __init__(self, cook_id, rank, proficiency, order_q: Queue):
+    def __init__(self, cook_id, rank, proeficiency, name, order_q: Queue):
         super(Cook, self).__init__()
         self.id = cook_id
         self.rank = rank
-        self.proficiency = proficiency
+        self.proeficiency = proeficiency
+        self.name = name
         self.order_q = order_q
 
     def run(self, *args):
@@ -23,7 +24,7 @@ class Cook(threading.Thread):
             if not self.order_q.empty():
                 order = self.order_q.get()
                 order_items = order["order"]['order_items']
-                print(order_items)
+
                 while order_items:
                     item = order_items.pop(0)
                     print(item)

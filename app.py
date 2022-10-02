@@ -42,9 +42,11 @@ def receive_order():
 
 if __name__ == '__main__':
 
-    for cook_id in range(0, NUMBER_OF_COOKS):
-        cook = Cook(cook_id, 3, 3, orderList)
-        cook.daemon = True
-        cook.start()
+    cooks = json.load(open('./src/cooks.json'))
+
+    for cook in cooks:
+        cook_thread = Cook(cook["id"], cook["rank"], cook["proeficiency"], cook["name"], orderList)
+        cook_thread.daemon = True
+        cook_thread.start()
 
     app.run(debug=True, port=5000, host="0.0.0.0")
