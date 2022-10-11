@@ -39,7 +39,9 @@ class Cook(threading.Thread):
                 print(f"Cook {self.id} started preparation of {dish['id']} from order {order.order_id} order_id {order.order_id}")
                 time.sleep(dish['preparation-time'])
                 if order.is_ready():
-                    requests.post(f"{DINING_HALL_URL}/order-from-kitchen", json=json.dumps(order.get()))
+                    now = time.time()
+                    order.cooking_time = now - order.pick_up_time
+                    requests.post(f"{DINING_HALL_URL}/distribution", json=json.dumps(order.get()))
                 else:
                     continue
 

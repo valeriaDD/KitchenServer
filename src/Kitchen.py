@@ -17,6 +17,7 @@ class Kitchen:
                       order_dict["waiter_id"], order_dict["order_items"],
                       order_dict["priority"], order_dict["max_wait"],
                       order_dict["pick_up_time"])
+
         self.order_q_mutex.acquire()
         self.order_q.put(order)
         self.order_q_mutex.release()
