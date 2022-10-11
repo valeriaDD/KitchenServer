@@ -58,7 +58,7 @@ class Cook(threading.Thread):
         for order in self.kitchen.order_q.queue:
             for items_to_be_prepared in order.items_to_be_prepared:
                 item = Menu().get_menu_item(items_to_be_prepared)
-                if self.rank >= item["complexity"]:
+                if self.rank == item["complexity"] or self.rank == int(item["complexity"]) - 1:
                     print(f"items: {order.items} to prepate: {order.items_to_be_prepared}")
                     order.items_to_be_prepared.remove(item["id"])
                     print(f"items: {order.items} to prepate: {order.items_to_be_prepared}")
