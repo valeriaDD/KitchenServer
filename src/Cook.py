@@ -1,43 +1,68 @@
 import json
+import logging
 import threading
 import time
-from queue import Queue
+
+from src.Kitchen import Kitchen
 from src.Menu import Menu
+
 from pipenv.patched.pip._vendor import requests
 
 DINING_HALL_URL = "http://dining-hall:5001"
+
+logger = logging.getLogger(__name__)
 
 
 class Cook(threading.Thread):
     menu = Menu()
 
-    def __init__(self, cook_id, rank, proeficiency, name, order_q: Queue):
+    def __init__(self, cook_id, rank, proeficiency, name, kitchen: Kitchen):
         super(Cook, self).__init__()
         self.id = cook_id
         self.rank = rank
         self.proeficiency = proeficiency
         self.name = name
-        self.order_q = order_q
+        self.kitchen = kitchen
 
     def run(self, *args):
+        for i in range(self.proeficiency):
+            task_thread = threading.Thread(target=self.cook)
+            task_thread.daemon = True
+            task_thread.start()
+
+    def cook(self):
         while True:
-            if not self.order_q.empty():
-                order = self.order_q.get()
-                order_items = order["order"]['order_items']
+            self.kitchen.order_q_mutex.acquire()
+            dish, order = self.find_food_item()
+            self.kitchen.order_q_mutex.release()
+            if dish is not None:
+                print(f"Cook {self.id} started preparation of {dish['id']} from order {order.order_id} order_id {order.order_id}")
+                time.sleep(dish['preparation-time'])
+                if order.is_ready():
+                    requests.post(f"{DINING_HALL_URL}/order-from-kitchen", json=json.dumps(order.get()))
+                else:
+                    continue
 
-                for i in range(self.proeficiency):
-                    while order_items:
-                        item = order_items.pop(0)
-                        task_thread = threading.Thread(target=self.cook, args=[item["id"]])
-                        task_thread.daemon = True
-                        task_thread.start()
-                        print(item)
-                        requests.post(f"{DINING_HALL_URL}/order-from-kitchen", json=json.dumps(order))
-                    else:
-                        time.sleep(3)
+    def find_food_item(self):
+        dish, order = self.find_dish_to_prepare()
 
-    def cook(self, item_id):
-        menu_item = self.menu.get_menu_item(item_id)
-        menu_item_preparation_time = menu_item["preparation-time"]
-        print(f"Cook {self.id} started preparation of {item_id}")
-        time.sleep(menu_item_preparation_time)
+        if dish is not None:
+            order.cooking_details.append({
+                "food_id": dish["id"],
+                "cook_id": self.id,
+            })
+
+        return dish, order
+
+    def find_dish_to_prepare(self):
+        for order in self.kitchen.order_q.queue:
+            for items_to_be_prepared in order.items_to_be_prepared:
+                item = Menu().get_menu_item(items_to_be_prepared)
+                if self.rank >= item["complexity"]:
+                    print(f"items: {order.items} to prepate: {order.items_to_be_prepared}")
+                    order.items_to_be_prepared.remove(item["id"])
+                    print(f"items: {order.items} to prepate: {order.items_to_be_prepared}")
+                    return item, order
+                else:
+                    continue
+        return None, None

@@ -1,9 +1,10 @@
-import queue
 import json
+import logging
 
 from flask import Flask, request
 
 from src.Cook import Cook
+from src.Kitchen import Kitchen
 
 NUMBER_OF_COOKS = 4
 
@@ -11,41 +12,31 @@ app = Flask(__name__)
 
 DINING_HALL_URL = "http://dining-hall:5001"
 
-orderList = queue.Queue()
+logger = logging.getLogger(__name__)
+
 
 @app.route("/")
 def home():
     return "Hello from kitchen server"
 
 
-@app.route("/list")
-def see_order_list():
-    elements = list()
-    for q_item in orderList.queue:
-        elements.append(q_item)
-
-    return f"{len(elements)}"
-
 @app.route('/order', methods=['POST'])
 def receive_order():
     data = request.json
-    order_dict = json.loads(data)["order"]
+    order_dict = json.loads(data)
+    logger.info("Order is here")
+    app.logger.info("Order is here")
+    kitchen.add_order(order_dict)
 
-    app.logger.info("A request from dining hall is here!")
-    app.logger.info(json.dumps(f"Order id: {order_dict['id']}"))
-    app.logger.info(json.dumps(f"Max wait: {order_dict['max_wait']}"))
-    orderList.put(json.loads(data))
-
-    # requests.post(f"{DINING_HALL_URL}/order-from-kitchen", json=data)
     return "Ok"
 
 
 if __name__ == '__main__':
-
     cooks = json.load(open('./src/cooks.json'))
+    kitchen = Kitchen()
 
     for cook in cooks:
-        cook_thread = Cook(cook["id"], cook["rank"], cook["proeficiency"], cook["name"], orderList)
+        cook_thread = Cook(cook["id"], cook["rank"], cook["proeficiency"], cook["name"], kitchen)
         cook_thread.daemon = True
         cook_thread.start()
 
