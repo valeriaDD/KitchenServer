@@ -33,7 +33,10 @@ def receive_order():
 
 if __name__ == '__main__':
     cooks = json.load(open('./src/cooks.json'))
-    kitchen = Kitchen()
+    oven_number = 2
+    stove_number = 1
+    kitchen = Kitchen(oven_number, stove_number)
+
 
     for cook in cooks:
         cook_thread = Cook(cook["id"], cook["rank"], cook["proeficiency"], cook["name"], kitchen)
