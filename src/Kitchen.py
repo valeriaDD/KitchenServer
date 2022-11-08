@@ -42,12 +42,10 @@ class Kitchen:
             print(q_item.get())
 
     def add_order(self, order_dict):
-        order = Order(order_dict["order_id"], order_dict["table_id"],
-                      order_dict["waiter_id"], order_dict["order_items"],
-                      order_dict["priority"], order_dict["max_wait"],
-                      order_dict["pick_up_time"])
+        order = Order(order_dict["order_id"], order_dict["client_id"],
+                      order_dict["order_items"],
+                      order_dict["priority"], order_dict["max_wait"])
 
         self.order_q_mutex.acquire()
         self.order_q.append(order)
         self.order_q_mutex.release()
-

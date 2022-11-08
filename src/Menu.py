@@ -7,14 +7,14 @@ class Menu:
         self.menu = [{
             "id": 1,
             "name": "pizza",
-            "preparation-time": 20,
+            "preparation-time": 10,
             "complexity": 2,
-            "cooking-apparatus": "oven"
+            "cooking-apparatus": None
         },
             {
                 "id": 2,
                 "name": "salad",
-                "preparation-time": 10,
+                "preparation-time": 5,
                 "complexity": 1,
                 "cooking-apparatus": None
             },
@@ -23,49 +23,49 @@ class Menu:
                 "name": "zeama",
                 "preparation-time": 7,
                 "complexity": 1,
-                "cooking-apparatus": "stove"
+                "cooking-apparatus": None
             },
             {
                 "id": 4,
                 "name": "Scallop Sashimi with Meyer Lemon Confit",
-                "preparation-time": 32,
+                "preparation-time": 12,
                 "complexity": 3,
                 "cooking-apparatus": None
             },
             {
                 "id": 5,
                 "name": "Island Duck with Mulberry Mustard",
-                "preparation-time": 35,
+                "preparation-time": 11,
                 "complexity": 3,
-                "cooking-apparatus": "oven"
+                "cooking-apparatus": None
             },
             {
                 "id": 6,
                 "name": "Waffles",
                 "preparation-time": 10,
                 "complexity": 1,
-                "cooking-apparatus": "stove"
+                "cooking-apparatus": None
             },
             {
                 "id": 7,
                 "name": "Aubergine",
-                "preparation-time": 20,
+                "preparation-time": 9,
                 "complexity": 2,
-                "cooking-apparatus": "oven"
+                "cooking-apparatus": None
             },
             {
                 "id": 8,
                 "name": "Lasagna",
-                "preparation-time": 30,
+                "preparation-time": 16,
                 "complexity": 2,
-                "cooking-apparatus": "oven"
+                "cooking-apparatus": None
             },
             {
                 "id": 9,
                 "name": "Burger",
                 "preparation-time": 15,
                 "complexity": 1,
-                "cooking-apparatus": "stove"
+                "cooking-apparatus": None
             },
             {
                 "id": 10,
@@ -91,9 +91,9 @@ class Menu:
             {
                 "id": 13,
                 "name": "Tobacco Chicken",
-                "preparation-time": 30,
+                "preparation-time": 14,
                 "complexity": 2,
-                "cooking-apparatus": "oven"
+                "cooking-apparatus": None
             }]
 
     def get_menu_item(self, item_id):

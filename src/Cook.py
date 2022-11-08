@@ -8,7 +8,7 @@ from src.Menu import Menu
 
 from pipenv.patched.pip._vendor import requests
 
-DINING_HALL_URL = "http://dining-hall:5001"
+FOOD_ORDERING_SERVICE = "http://food-ordering:5003"
 
 logger = logging.getLogger(__name__)
 
@@ -45,8 +45,8 @@ class Cook(threading.Thread):
                     if order in self.kitchen.order_q:
                         self.kitchen.order_q.remove(order)
                     now = time.time()
-                    order.cooking_time = now - order.pick_up_time
-                    requests.post(f"{DINING_HALL_URL}/distribution", json=json.dumps(order.get()))
+                    order.cooking_time = now
+                    requests.post(f"{FOOD_ORDERING_SERVICE}/distribution", json=json.dumps(order.get()))
                     self.kitchen.order_q_mutex.release()
                 else:
                     continue

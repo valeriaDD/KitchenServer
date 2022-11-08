@@ -25,7 +25,7 @@ def receive_order():
     data = request.json
     order_dict = json.loads(data)
     logger.info("Order is here")
-    app.logger.info("Order is here")
+    app.logger.info("Order is here in the kitchen")
     kitchen.add_order(order_dict)
 
     return "Ok"
